@@ -27,11 +27,11 @@ public class ItemServiceImpl implements ItemService {
     /**
      * Метод для добавления новой вещи.
      *
-     * @param idUser идентификатор пользователя
+     * @param idUser  идентификатор пользователя
      * @param itemDto объект ItemDto, содержащий данные новой вещи
      * @return объект Item, содержащий данные добавленной вещи
      * @throws ValidationException если идентификатор пользователя не указан
-     * @throws NotFoundException если пользователь с указанным id не найден в БД
+     * @throws NotFoundException   если пользователь с указанным id не найден в БД
      */
     @Override
     public Item addItem(Long idUser, ItemDto itemDto) {
@@ -40,8 +40,8 @@ public class ItemServiceImpl implements ItemService {
             log.error(error);
             throw new ValidationException(error);
         }
-        if ( userRepository.findById(idUser).isEmpty() ) {
-            String error = "Пользователь с id [ "+idUser+" ] не найден в БД при добавлении вещи.";
+        if (userRepository.findById(idUser).isEmpty()) {
+            String error = "Пользователь с id [ " + idUser + " ] не найден в БД при добавлении вещи.";
             log.info(error);
             throw new NotFoundException(error);
         }
@@ -55,12 +55,12 @@ public class ItemServiceImpl implements ItemService {
     /**
      * Метод для обновления данных вещи.
      *
-     * @param idUser идентификатор пользователя
-     * @param idItem идентификатор вещи
+     * @param idUser  идентификатор пользователя
+     * @param idItem  идентификатор вещи
      * @param itemDto объект ItemDto, содержащий новые данные вещи
      * @return объект Item, содержащий обновленные данные вещи
-     * @throws ValidationException если идентификатор пользователя не указан
-     * @throws NotFoundException если пользователь или вещь с указанным id не найдены в БД
+     * @throws ValidationException       если идентификатор пользователя не указан
+     * @throws NotFoundException         если пользователь или вещь с указанным id не найдены в БД
      * @throws RestrictedAccessException если пользователь не является владельцем вещи
      */
     @Override
@@ -70,19 +70,19 @@ public class ItemServiceImpl implements ItemService {
             log.error(error);
             throw new ValidationException(error);
         }
-        if ( userRepository.findById(idUser).isEmpty() ) {
-            String error = "Пользователь с id [ "+idUser+" ] не найден в БД при изменение данных вещи.";
+        if (userRepository.findById(idUser).isEmpty()) {
+            String error = "Пользователь с id [ " + idUser + " ] не найден в БД при изменение данных вещи.";
             log.info(error);
             throw new NotFoundException(error);
         }
         Optional<Item> oldItem = itemRepository.findById(idItem);
-        if ( oldItem.isEmpty() ) {
-            String error = "Вещь с id [ "+idItem+" ] не найдена в БД при изменение данных вещи.";
+        if (oldItem.isEmpty()) {
+            String error = "Вещь с id [ " + idItem + " ] не найдена в БД при изменение данных вещи.";
             log.info(error);
             throw new NotFoundException(error);
         }
         if (!idUser.equals(oldItem.get().getOwner().getId())) {
-            String error = "Пользователь с id [ "+idUser+" ] не является владельцем вещи с id [ "+idItem+" ].";
+            String error = "Пользователь с id [ " + idUser + " ] не является владельцем вещи с id [ " + idItem + " ].";
             log.info(error);
             throw new RestrictedAccessException(error);
         }
@@ -115,7 +115,7 @@ public class ItemServiceImpl implements ItemService {
     public Item getItemById(Long idItem) {
         Optional<Item> oldItem = itemRepository.findById(idItem);
         if (oldItem.isEmpty()) {
-            String error = "Вещь с id [ "+idItem+" ] не найдена в БД при запросе данных вещи.";
+            String error = "Вещь с id [ " + idItem + " ] не найдена в БД при запросе данных вещи.";
             log.info(error);
             throw new NotFoundException(error);
         }
@@ -129,7 +129,7 @@ public class ItemServiceImpl implements ItemService {
      * @param idUser идентификатор пользователя
      * @param idItem идентификатор вещи
      * @throws ValidationException если идентификатор пользователя не указан
-     * @throws NotFoundException если пользователь или вещь с указанным id не найдены в БД
+     * @throws NotFoundException   если пользователь или вещь с указанным id не найдены в БД
      */
     @Override
     public void removeItem(Long idUser, Long idItem) {
@@ -138,13 +138,13 @@ public class ItemServiceImpl implements ItemService {
             log.error(error);
             throw new ValidationException(error);
         }
-        if ( userRepository.findById(idUser).isEmpty() ) {
-            String error = "Пользователь с id [ "+idUser+" ] не найден в БД при удалении данных о вещи.";
+        if (userRepository.findById(idUser).isEmpty()) {
+            String error = "Пользователь с id [ " + idUser + " ] не найден в БД при удалении данных о вещи.";
             log.info(error);
             throw new NotFoundException(error);
         }
-        if ( itemRepository.findById(idItem).isEmpty() ) {
-            String error = "Вещь с id [ "+idItem+" ] не найдена в БД при удалении данных о вещи.";
+        if (itemRepository.findById(idItem).isEmpty()) {
+            String error = "Вещь с id [ " + idItem + " ] не найдена в БД при удалении данных о вещи.";
             log.info(error);
             throw new NotFoundException(error);
         }
@@ -158,7 +158,7 @@ public class ItemServiceImpl implements ItemService {
      * @param idUser идентификатор пользователя
      * @return список всех вещей пользователя, отсортированных по имени
      * @throws ValidationException если идентификатор пользователя не указан
-     * @throws NotFoundException если пользователь с указанным id не найден в БД
+     * @throws NotFoundException   если пользователь с указанным id не найден в БД
      */
     @Override
     public List<Item> getAllItems(Long idUser) {
@@ -168,8 +168,8 @@ public class ItemServiceImpl implements ItemService {
             throw new ValidationException(error);
         }
         Optional<User> user = userRepository.findById(idUser);
-        if ( user.isEmpty() ) {
-            String error = "Пользователь с id [ "+idUser+" ] не найден в БД при изменение данных вещи.";
+        if (user.isEmpty()) {
+            String error = "Пользователь с id [ " + idUser + " ] не найден в БД при изменение данных вещи.";
             log.info(error);
             throw new NotFoundException(error);
         }

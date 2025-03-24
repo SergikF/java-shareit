@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     public User addUser(UserDto userDto) {
         Optional<User> oldUser = userRepository.getUserByEmail(userDto.getEmail());
         if (oldUser.isPresent()) {
-            String error = "Пользователь с email [ "+userDto.getEmail()+" ] уже существует в БД. " +
+            String error = "Пользователь с email [ " + userDto.getEmail() + " ] уже существует в БД. " +
                     "Добавление пользователя невозможно.";
             log.error(error);
             throw new DataConflictException(error);
@@ -43,18 +43,18 @@ public class UserServiceImpl implements UserService {
     /**
      * Метод для обновления данных пользователя.
      *
-     * @param idUser идентификатор пользователя
+     * @param idUser  идентификатор пользователя
      * @param userDto объект UserDto, содержащий новые данные пользователя
      * @return объект User, содержащий обновленные данные пользователя
      * @throws DataConflictException если пользователь с указанным email уже существует в БД
-     * @throws NotFoundException если пользователь с указанным id не найден в БД
+     * @throws NotFoundException     если пользователь с указанным id не найден в БД
      */
     @Override
     public User updateUser(Long idUser, UserDto userDto) {
         Optional<User> oldUser = userRepository.getUserByEmail(userDto.getEmail());
         if (oldUser.isPresent()) {
-            String error = "Пользователь с email [ "+userDto.getEmail()+" ] уже существует в БД. " +
-                        "Обновление данных пользователя невозможно.";
+            String error = "Пользователь с email [ " + userDto.getEmail() + " ] уже существует в БД. " +
+                    "Обновление данных пользователя невозможно.";
             log.error(error);
             throw new DataConflictException(error);
         }
@@ -65,11 +65,11 @@ public class UserServiceImpl implements UserService {
             if (newUser.getName() == null) {
                 newUser.setName(oldUser.get().getName());
             }
-            if (newUser.getEmail() == null ) {
+            if (newUser.getEmail() == null) {
                 newUser.setEmail(oldUser.get().getEmail());
             }
         } else {
-            String error = "Пользователь с id [ "+idUser+" ] не найден в БД при обновлении данных пользователя.";
+            String error = "Пользователь с id [ " + idUser + " ] не найден в БД при обновлении данных пользователя.";
             log.info(error);
             throw new NotFoundException(error);
         }
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
     public User getUserById(Long idUser) {
         Optional<User> oldUser = userRepository.findById(idUser);
         if (oldUser.isEmpty()) {
-            String error = "Пользователь с id [ "+idUser+" ] не найден в БД при запросе данных пользователя.";
+            String error = "Пользователь с id [ " + idUser + " ] не найден в БД при запросе данных пользователя.";
             log.info(error);
             throw new NotFoundException(error);
         }
@@ -120,7 +120,7 @@ public class UserServiceImpl implements UserService {
     public void removeUser(Long idUser) {
         Optional<User> oldUser = userRepository.findById(idUser);
         if (oldUser.isEmpty()) {
-            String error = "Пользователь с id [ "+idUser+" ] не найден в БД при удалении пользователя.";
+            String error = "Пользователь с id [ " + idUser + " ] не найден в БД при удалении пользователя.";
             log.info(error);
             throw new NotFoundException(error);
         }

@@ -21,11 +21,11 @@ public class ItemController {
     @ResponseStatus(HttpStatus.CREATED)
     public Item addItem(@Validated(CreateObject.class) @RequestBody ItemDto itemDto,
                         @RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") Long idUser) {
-            return itemService.addItem(idUser, itemDto);
+        return itemService.addItem(idUser, itemDto);
     }
 
     @PatchMapping("/{idItem}")
-    public Item updateItem(@PathVariable Long idItem,@Validated(UpdateObject.class) @RequestBody ItemDto itemDto,
+    public Item updateItem(@PathVariable Long idItem, @Validated(UpdateObject.class) @RequestBody ItemDto itemDto,
                            @RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") Long idUser) {
         return itemService.updateItem(idUser, idItem, itemDto);
     }
