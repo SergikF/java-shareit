@@ -14,6 +14,8 @@ import ru.practicum.shareit.validation.UpdateObject;
 @NoArgsConstructor
 public class UserDto {
 
+    private Long id;
+
     @NotNull(groups = {CreateObject.class}, message = "Имя должно быть указано.")
     @NotBlank(groups = {CreateObject.class}, message = "Имя не может быть пустым.")
     private String name;

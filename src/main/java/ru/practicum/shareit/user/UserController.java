@@ -19,23 +19,23 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public User addUser(@Validated(CreateObject.class) @RequestBody UserDto userDto) {
-        return userService.addUser(userDto);
+    public UserDto addUser(@Validated(CreateObject.class) @RequestBody UserDto userDto) {
+        return UserMapper.toUserDto(userService.addUser(userDto));
     }
 
     @PatchMapping("/{idUser}")
-    public User updateUser(@PathVariable Long idUser, @Validated(UpdateObject.class) @RequestBody UserDto userDto) {
-        return userService.updateUser(idUser, userDto);
+    public UserDto updateUser(@PathVariable Long idUser, @Validated(UpdateObject.class) @RequestBody UserDto userDto) {
+        return UserMapper.toUserDto(userService.updateUser(idUser, userDto));
     }
 
     @GetMapping("/{idUser}")
-    public User getUserById(@PathVariable Long idUser) {
-        return userService.getUserById(idUser);
+    public UserDto getUserById(@PathVariable Long idUser) {
+        return UserMapper.toUserDto(userService.getUserById(idUser));
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
+    public List<UserDto> getAllUsers() {
+        return userService.getAllUsers().stream().map(UserMapper::toUserDto).toList();
     }
 
     @DeleteMapping("/{idUser}")

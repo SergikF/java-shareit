@@ -19,36 +19,36 @@ public class ItemController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Item addItem(@Validated(CreateObject.class) @RequestBody ItemDto itemDto,
-                        @RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") Long idUser) {
-        return itemService.addItem(idUser, itemDto);
+    public ItemDto addItem(@Validated(CreateObject.class) @RequestBody ItemDto itemDto,
+                        @RequestHeader(value = "X-Sharer-User-Id") Long idUser) {
+        return ItemMapper.toItemDto(itemService.addItem(idUser, itemDto));
     }
 
     @PatchMapping("/{idItem}")
-    public Item updateItem(@PathVariable Long idItem, @Validated(UpdateObject.class) @RequestBody ItemDto itemDto,
-                           @RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") Long idUser) {
-        return itemService.updateItem(idUser, idItem, itemDto);
+    public ItemDto updateItem(@PathVariable Long idItem, @Validated(UpdateObject.class) @RequestBody ItemDto itemDto,
+                           @RequestHeader(value = "X-Sharer-User-Id") Long idUser) {
+        return ItemMapper.toItemDto(itemService.updateItem(idUser, idItem, itemDto));
     }
 
     @GetMapping("/{idItem}")
-    public Item getItemById(@PathVariable Long idItem) {
-        return itemService.getItemById(idItem);
+    public ItemDto getItemById(@PathVariable Long idItem) {
+        return ItemMapper.toItemDto(itemService.getItemById(idItem));
     }
 
     @GetMapping
-    public List<Item> getAllItemsByUser(@RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") Long idUser) {
-        return itemService.getAllItems(idUser);
+    public List<ItemDto> getAllItemsByUser(@RequestHeader(value = "X-Sharer-User-Id") Long idUser) {
+        return itemService.getAllItems(idUser).stream().map(ItemMapper::toItemDto).toList();
     }
 
     @DeleteMapping("/{idItem}")
     public void removeItem(@PathVariable Long idItem,
-                           @RequestHeader(value = "X-Sharer-User-Id", defaultValue = "0") Long idUser) {
+                           @RequestHeader(value = "X-Sharer-User-Id") Long idUser) {
         itemService.removeItem(idUser, idItem);
     }
 
     @GetMapping("/search")
-    public List<Item> searchItemsByText(@RequestParam String text) {
-        return itemService.searchItems(text);
+    public List<ItemDto> searchItemsByText(@RequestParam String text) {
+        return itemService.searchItems(text).stream().map(ItemMapper::toItemDto).toList();
     }
 
 }

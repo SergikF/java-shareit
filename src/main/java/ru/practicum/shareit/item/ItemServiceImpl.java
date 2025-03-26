@@ -35,11 +35,6 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public Item addItem(Long idUser, ItemDto itemDto) {
-        if (idUser == 0) {
-            String error = "Не указан пользователь в запросе на добавление вещи.";
-            log.error(error);
-            throw new ValidationException(error);
-        }
         if (userRepository.findById(idUser).isEmpty()) {
             String error = "Пользователь с id [ " + idUser + " ] не найден в БД при добавлении вещи.";
             log.info(error);
@@ -65,11 +60,6 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public Item updateItem(Long idUser, Long idItem, ItemDto itemDto) {
-        if (idUser == 0) {
-            String error = "Не указан пользователь в запросе на изменение данных о вещи.";
-            log.error(error);
-            throw new ValidationException(error);
-        }
         if (userRepository.findById(idUser).isEmpty()) {
             String error = "Пользователь с id [ " + idUser + " ] не найден в БД при изменение данных вещи.";
             log.info(error);
@@ -133,11 +123,6 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public void removeItem(Long idUser, Long idItem) {
-        if (idUser == 0) {
-            String error = "Не указан пользователь в запросе на удаление данных о вещи.";
-            log.error(error);
-            throw new ValidationException(error);
-        }
         if (userRepository.findById(idUser).isEmpty()) {
             String error = "Пользователь с id [ " + idUser + " ] не найден в БД при удалении данных о вещи.";
             log.info(error);
@@ -162,11 +147,6 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public List<Item> getAllItems(Long idUser) {
-        if (idUser == 0) {
-            String error = "Не указан пользователь в запросе на изменение данных о вещи.";
-            log.error(error);
-            throw new ValidationException(error);
-        }
         Optional<User> user = userRepository.findById(idUser);
         if (user.isEmpty()) {
             String error = "Пользователь с id [ " + idUser + " ] не найден в БД при изменение данных вещи.";
