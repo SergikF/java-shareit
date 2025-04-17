@@ -187,9 +187,7 @@ public class ItemServiceImpl implements ItemService {
      */
     @Override
     public Comment saveComment(Long bookerId, Long itemId, CommentDto commentDto) {
-        if (commentDto.getText().isBlank()) {
-            throw new ValidationException("Текст комментария не может быть пустым.");
-        }
+
         User userFromBd = userRepository.findById(bookerId).orElseThrow(() ->
                 new NotFoundException("Ошибка при сохранении комментария к вещи с ID = " + itemId
                         + " пользователя с ID = " + bookerId + " в БД. В БД отсутствует запись о пользователе."));

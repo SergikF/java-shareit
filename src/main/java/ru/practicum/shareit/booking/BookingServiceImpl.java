@@ -50,7 +50,7 @@ public class BookingServiceImpl implements BookingService {
         bookingDto.setItem(itemFromDB);
         bookingDto.setBooker(bookerFromDb);
         Booking result = bookingRepository.save(BookingMapper.toBooking(bookingDto));
-        log.info("Создано бронирование с ID = '" + result.getId() + "'.");
+        log.info("Создано бронирование с ID = [ {} ].", result.getId());
         return result;
     }
 
@@ -80,7 +80,7 @@ public class BookingServiceImpl implements BookingService {
             if (i.getId().equals(bookingFromBd.getItem().getId())) {
                 bookingFromBd.setStatus(approved ? BookingStatus.APPROVED : BookingStatus.REJECTED);
                 Booking result = bookingRepository.save(bookingFromBd);
-                log.info("Бронирование с ID = '" + bookingId + "' обновлено.");
+                log.info("Бронирование с ID = [ {} ] обновлено.", bookingId);
                 return result;
             }
         }
@@ -252,25 +252,9 @@ public class BookingServiceImpl implements BookingService {
             log.info(message);
             throw new ValidationException(message);
         }
-        if (bookingDto.getStart() == null || bookingDto.getEnd() == null) {
-            String message = "Начало и окончание бронирования не может быть null.";
-            log.info(message);
-            throw new ValidationException(message);
-        }
+
         if (bookingDto.getStart().equals(bookingDto.getEnd())) {
             String message = "Начало и окончание бронирования не может быть одним и тем же временем.";
-            log.info(message);
-            throw new ValidationException(message);
-        }
-
-        if (bookingDto.getStart().isBefore(LocalDateTime.now())) {
-            String message = "Начало бронирования не может быть в прошлом [" + bookingDto.getStart() + "].";
-            log.info(message);
-            throw new ValidationException(message);
-        }
-
-        if (bookingDto.getEnd().isBefore(LocalDateTime.now())) {
-            String message = "Окончание бронирования не может быть в прошлом [" + bookingDto.getEnd() + "].";
             log.info(message);
             throw new ValidationException(message);
         }
@@ -286,7 +270,7 @@ public class BookingServiceImpl implements BookingService {
             for (Booking b : bookings) {
                 if (!(b.getEnd().isBefore(bookingDto.getStart()) ||
                         b.getStart().isAfter(bookingDto.getStart()))) {
-                    String message = "Найдено пересечение дат бронирования на эту вещь с name = " + item.getName() + ".";
+                    String message = "Найдено пересечение дат бронирования на вещь с name = " + item.getName() + ".";
                     log.debug(message);
                     throw new ValidationException(message);
                 }
