@@ -19,23 +19,23 @@ public class UserController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto addUser(@Validated(CreateObject.class) @RequestBody UserDto userDto) {
-        return UserMapper.toUserDto(userService.addUser(userDto));
+    public UserDtoOutput addUser(@Validated(CreateObject.class) @RequestBody UserDto userDto) {
+        return UserMapper.toUserDtoOutput(userService.addUser(userDto));
     }
 
     @PatchMapping("/{idUser}")
-    public UserDto updateUser(@PathVariable Long idUser, @Validated(UpdateObject.class) @RequestBody UserDto userDto) {
-        return UserMapper.toUserDto(userService.updateUser(idUser, userDto));
+    public UserDtoOutput updateUser(@PathVariable Long idUser, @Validated(UpdateObject.class) @RequestBody UserDto userDto) {
+        return UserMapper.toUserDtoOutput(userService.updateUser(idUser, userDto));
     }
 
     @GetMapping("/{idUser}")
-    public UserDto getUserById(@PathVariable Long idUser) {
-        return UserMapper.toUserDto(userService.getUserById(idUser));
+    public UserDtoOutput getUserById(@PathVariable Long idUser) {
+        return UserMapper.toUserDtoOutput(userService.getUserById(idUser));
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers().stream().map(UserMapper::toUserDto).toList();
+    public List<UserDtoOutput> getAllUsers() {
+        return userService.getAllUsers().stream().map(UserMapper::toUserDtoOutput).toList();
     }
 
     @DeleteMapping("/{idUser}")

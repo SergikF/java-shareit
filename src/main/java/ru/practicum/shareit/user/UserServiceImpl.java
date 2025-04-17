@@ -58,21 +58,21 @@ public class UserServiceImpl implements UserService {
             log.error(error);
             throw new DataConflictException(error);
         }
-        User newUser = UserMapper.toUser(userDto);
-        newUser.setId(idUser);
+        userDto.setId(idUser);
         oldUser = userRepository.findById(idUser);
         if (oldUser.isPresent()) {
-            if (newUser.getName() == null) {
-                newUser.setName(oldUser.get().getName());
+            if (userDto.getName() == null) {
+                userDto.setName(oldUser.get().getName());
             }
-            if (newUser.getEmail() == null) {
-                newUser.setEmail(oldUser.get().getEmail());
+            if (userDto.getEmail() == null) {
+                userDto.setEmail(oldUser.get().getEmail());
             }
         } else {
             String error = "Пользователь с id [ " + idUser + " ] не найден в БД при обновлении данных пользователя.";
             log.info(error);
             throw new NotFoundException(error);
         }
+        User newUser = UserMapper.toUser(userDto);
         userRepository.save(newUser);
         log.info("Обновлен пользователь [ {} ]", newUser);
         return newUser;
@@ -125,7 +125,8 @@ public class UserServiceImpl implements UserService {
             throw new NotFoundException(error);
         }
         userRepository.delete(oldUser.get());
-        log.info("По id [ {} ] успешно удален пользователь [ {} ].", idUser, oldUser.get());
+        log.info("По id [ {} ] успешно удален пользователь.", idUser);
+        // log.info("По id [ {} ] успешно удален пользователь [ {} ].", idUser, oldUser.get());
     }
 
 }

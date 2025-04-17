@@ -1,14 +1,16 @@
 package ru.practicum.shareit.item;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.request.Request;
 import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.validation.CreateObject;
+
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -30,9 +32,14 @@ public class ItemDto {
 
     private User owner;
 
-    private ItemRequest request;
+    private Request request;
 
+    private List<Comment> comments;
 
+    private List<Booking> bookings;
 
+    private Booking lastBooking;
+
+    private Booking nextBooking;
 
 }

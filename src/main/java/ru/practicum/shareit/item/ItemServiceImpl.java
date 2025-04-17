@@ -3,12 +3,15 @@ package ru.practicum.shareit.item;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.exception.RestrictedAccessException;
 import ru.practicum.shareit.exception.ValidationException;
 import ru.practicum.shareit.user.User;
+import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +21,12 @@ public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
 
-    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository) {
+    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository, CommentRepository commentRepository) {
         this.itemRepository = itemRepository;
         this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
     }
 
     /**
@@ -40,10 +45,10 @@ public class ItemServiceImpl implements ItemService {
             log.info(error);
             throw new NotFoundException(error);
         }
+        itemDto.setOwner(userRepository.findById(idUser).get());
         Item result = ItemMapper.toItem(itemDto);
-        result.setOwner(userRepository.findById(idUser).get());
         itemRepository.save(result);
-        log.info("Добавлена вещь [ {} ] пользователем [ {} ]", result, idUser);
+        log.info("Добавлена вещь [ {} ] пользователем [ {} ]", result.getId(), idUser);
         return result;
     }
 
@@ -76,21 +81,21 @@ public class ItemServiceImpl implements ItemService {
             log.info(error);
             throw new RestrictedAccessException(error);
         }
+        itemDto.setId(idItem);
+        itemDto.setOwner(oldItem.get().getOwner());
+        itemDto.setRequest(oldItem.get().getRequest());
+        if (itemDto.getName() == null) {
+            itemDto.setName(oldItem.get().getName());
+        }
+        if (itemDto.getDescription() == null) {
+            itemDto.setDescription(oldItem.get().getDescription());
+        }
+        if (itemDto.getAvailable() == null) {
+            itemDto.setAvailable(oldItem.get().getAvailable());
+        }
         Item newItem = ItemMapper.toItem(itemDto);
-        newItem.setId(idItem);
-        newItem.setOwner(oldItem.get().getOwner());
-        newItem.setRequest(oldItem.get().getRequest());
-        if (newItem.getName() == null) {
-            newItem.setName(oldItem.get().getName());
-        }
-        if (newItem.getDescription() == null) {
-            newItem.setDescription(oldItem.get().getDescription());
-        }
-        if (newItem.getAvailable() == null) {
-            newItem.setAvailable(oldItem.get().getAvailable());
-        }
         itemRepository.save(newItem);
-        log.info("Обновлены данные вещи [ {} ]", newItem);
+        log.info("Обновлены данные вещи [ {} ]", ItemMapper.toItemDtoShort(newItem));
         return newItem;
     }
 
@@ -154,7 +159,7 @@ public class ItemServiceImpl implements ItemService {
             throw new NotFoundException(error);
         }
         List<Item> result = itemRepository.findAllByOwner(user.get(), Sort.by("name"));
-        log.info("Получен список всех вещей пользователя [ {} ] : [ {} ]", user.get(), result);
+        log.info("Получен список всех вещей пользователя [ {} ] : [ {} ]", UserMapper.toUserDtoShort(user.get()), result.size());
         return result;
     }
 
@@ -170,7 +175,45 @@ public class ItemServiceImpl implements ItemService {
             return List.of();
         }
         List<Item> result = itemRepository.findAllByText(text);
-        log.info("Получен список вещей по поисковому запросу [ {} ] : [ {} ]", text, result);
+        log.info("Получен список вещей по поисковому запросу [ {} ] : [ {} ]", text, result.size());
+        return result;
+    }
+
+    /**
+     * Добавить комментарий к вещи пользователем, действительно бравшим вещь в аренду.
+     *
+     * @param bookerId ID пользователя, добавляющего комментарий.
+     * @param itemId   ID вещи, которой оставляется комментарий.
+     */
+    @Override
+    public Comment saveComment(Long bookerId, Long itemId, CommentDto commentDto) {
+        if (commentDto.getText().isBlank()) {
+            throw new ValidationException("Текст комментария не может быть пустым.");
+        }
+        User userFromBd = userRepository.findById(bookerId).orElseThrow(() ->
+                new NotFoundException("Ошибка при сохранении комментария к вещи с ID = " + itemId
+                        + " пользователя с ID = " + bookerId + " в БД. В БД отсутствует запись о пользователе."));
+        Item itemFromBd = itemRepository.findById(itemId).orElseThrow(() ->
+                new NotFoundException("Ошибка при сохранении комментария к вещи с ID = " + itemId
+                        + " пользователя с ID = " + bookerId + " в БД. В БД отсутствует запись о вещи."));
+        List<Booking> bookings = itemFromBd.getBookings();
+        boolean isBooker = false;
+        for (Booking b : bookings) {
+            if (b.getBooker().getId().equals(bookerId) && b.getEnd().isBefore(LocalDateTime.now())) {
+                isBooker = true;
+                break;
+            }
+        }
+        if (!isBooker) {
+            throw new ValidationException("Ошибка при сохранении комментария к вещи с ID = " + itemId
+                    + " пользователя с ID = " + bookerId + " в БД. Пользователь не арендовал эту вещь.");
+        }
+        commentDto.setItem(itemFromBd);
+        commentDto.setUser(userFromBd);
+        commentDto.setCreated(LocalDateTime.now());
+        Comment result = CommentMapper.toComment(commentDto);
+        result = commentRepository.save(result);
+        log.info("Комментарий к вещи успешно добавлен. Данные комментария: {}", CommentMapper.toCommentDtoShort(result));
         return result;
     }
 
