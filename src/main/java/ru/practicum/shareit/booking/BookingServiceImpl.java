@@ -160,12 +160,12 @@ public class BookingServiceImpl implements BookingService {
             }
             case WAITING: {
                 result = bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(
-                        bookerFromDb, BookingStatus.WAITING);
+                        bookerFromDb, BookingState.WAITING);
                 break;
             }
             case REJECTED: {
                 result = bookingRepository.findAllByBookerAndStatusEqualsOrderByStartDesc(
-                        bookerFromDb, BookingStatus.REJECTED);
+                        bookerFromDb, BookingState.REJECTED);
                 break;
             }
             default: {
@@ -223,12 +223,12 @@ public class BookingServiceImpl implements BookingService {
             }
             case WAITING: {
                 result = bookingRepository.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(
-                        bookerFromDb, BookingStatus.WAITING);
+                        bookerFromDb, BookingState.WAITING);
                 break;
             }
             case REJECTED: {
                 result = bookingRepository.findAllByItem_OwnerAndStatusEqualsOrderByStartDesc(
-                        bookerFromDb, BookingStatus.REJECTED);
+                        bookerFromDb, BookingState.REJECTED);
                 break;
             }
             default: {
