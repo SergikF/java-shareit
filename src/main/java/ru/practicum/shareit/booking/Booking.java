@@ -9,9 +9,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@ToString
 @RequiredArgsConstructor
 @AllArgsConstructor
-@ToString
 @EqualsAndHashCode(of = {"id"})
 @Entity
 @Table(name = "bookings")
@@ -20,20 +20,22 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "start_", nullable = false)
+    @Column(name = "start_date", nullable = false)
     private LocalDateTime start;
 
-    @Column(name = "end_", nullable = false)
+    @Column(name = "end_date", nullable = false)
     private LocalDateTime end;
 
     @ManyToOne
-    @JoinColumn(name = "item", nullable = false)
+    @JoinColumn(name = "item_id", nullable = false)
     private Item item;
 
     @ManyToOne
-    @JoinColumn(name = "booker", nullable = false)
+    @JoinColumn(name = "booker_id", nullable = false)
     private User booker;
 
     @Column(length = 10)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
+
 }

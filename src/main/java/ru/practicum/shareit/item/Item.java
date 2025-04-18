@@ -1,9 +1,14 @@
 package ru.practicum.shareit.item;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
-import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.booking.Booking;
+import ru.practicum.shareit.request.Request;
 import ru.practicum.shareit.user.User;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -11,6 +16,9 @@ import ru.practicum.shareit.user.User;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(of = {"id"})
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "id")
 @Entity
 @Table(name = "items")
 public class Item {
@@ -24,14 +32,21 @@ public class Item {
     @Column(length = 250)
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "is_available", nullable = false)
     private Boolean available;
 
     @ManyToOne
-    @JoinColumn(name = "owner", nullable = false)
+    @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
 
     @OneToOne
-    @JoinColumn(name = "request")
-    private ItemRequest request;
+    @JoinColumn(name = "request_id")
+    private Request request;
+
+    @OneToMany(mappedBy = "item")
+    private List<Comment> comments;
+
+    @OneToMany(mappedBy = "item")
+    private List<Booking> bookings;
+
 }

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -10,32 +11,29 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public UserDto addUser(@Validated(CreateObject.class) @RequestBody UserDto userDto) {
-        return UserMapper.toUserDto(userService.addUser(userDto));
+    public UserDtoOutput addUser(@Validated(CreateObject.class) @RequestBody UserDto userDto) {
+        return UserMapper.toUserDtoOutput(userService.addUser(userDto));
     }
 
     @PatchMapping("/{idUser}")
-    public UserDto updateUser(@PathVariable Long idUser, @Validated(UpdateObject.class) @RequestBody UserDto userDto) {
-        return UserMapper.toUserDto(userService.updateUser(idUser, userDto));
+    public UserDtoOutput updateUser(@PathVariable Long idUser, @Validated(UpdateObject.class) @RequestBody UserDto userDto) {
+        return UserMapper.toUserDtoOutput(userService.updateUser(idUser, userDto));
     }
 
     @GetMapping("/{idUser}")
-    public UserDto getUserById(@PathVariable Long idUser) {
-        return UserMapper.toUserDto(userService.getUserById(idUser));
+    public UserDtoOutput getUserById(@PathVariable Long idUser) {
+        return UserMapper.toUserDtoOutput(userService.getUserById(idUser));
     }
 
     @GetMapping
-    public List<UserDto> getAllUsers() {
-        return userService.getAllUsers().stream().map(UserMapper::toUserDto).toList();
+    public List<UserDtoOutput> getAllUsers() {
+        return userService.getAllUsers().stream().map(UserMapper::toUserDtoOutput).toList();
     }
 
     @DeleteMapping("/{idUser}")

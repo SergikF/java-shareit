@@ -1,17 +1,16 @@
 package ru.practicum.shareit.booking;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.practicum.shareit.item.Item;
-import ru.practicum.shareit.user.User;
 
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class BookingDto {
+public class BookingDtoShort {
 
     private Long id;
 
@@ -19,10 +18,7 @@ public class BookingDto {
 
     private LocalDateTime end;
 
-    private Item item;
-
-    private User booker;
-
+    @JsonProperty("status")
     private BookingStatus status;
 
 }
