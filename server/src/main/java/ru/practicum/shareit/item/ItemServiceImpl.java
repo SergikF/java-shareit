@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
@@ -14,6 +15,7 @@ import ru.practicum.shareit.user.User;
 import ru.practicum.shareit.user.UserMapper;
 import ru.practicum.shareit.user.UserRepository;
 
+import java.beans.Transient;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -202,6 +204,7 @@ public class ItemServiceImpl implements ItemService {
      * @param itemId   ID вещи, которой оставляется комментарий.
      */
     @Override
+    @Transactional
     public Comment saveComment(Long bookerId, Long itemId, CommentDto commentDto) {
 
         User userFromBd = userRepository.findById(bookerId).orElseThrow(() ->
