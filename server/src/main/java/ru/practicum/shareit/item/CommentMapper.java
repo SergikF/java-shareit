@@ -1,7 +1,5 @@
 package ru.practicum.shareit.item;
 
-import java.time.LocalDateTime;
-
 public class CommentMapper {
 
     public static CommentDto toCommentDto(Comment comment) {
