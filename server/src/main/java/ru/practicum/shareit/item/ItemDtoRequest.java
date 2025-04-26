@@ -15,6 +15,6 @@ public class ItemDtoRequest {
 
     private Long idOwner;
 
-    private String Owner;
+    private String owner;
 
 }
