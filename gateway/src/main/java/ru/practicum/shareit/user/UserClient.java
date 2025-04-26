@@ -23,7 +23,7 @@ public class UserClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> addUser( UserDtoInput userDto) {
+    public ResponseEntity<Object> addUser(UserDtoInput userDto) {
         return post("", userDto);
     }
 

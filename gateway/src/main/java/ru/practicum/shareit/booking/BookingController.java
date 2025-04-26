@@ -59,7 +59,7 @@ public class BookingController {
     public ResponseEntity<Object> getWithStatusById(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                     @PathVariable Long bookingId) {
         log.info("Получение данных о бронировании {}, пользователем {}", bookingId, userId);
-        return bookingClient.getWithStatusById( bookingId, userId);
+        return bookingClient.getWithStatusById(bookingId, userId);
     }
 
     /**
