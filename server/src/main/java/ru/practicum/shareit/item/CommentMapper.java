@@ -73,9 +73,7 @@ public class CommentMapper {
             }
         }
         if (commentDto.getCreated() != null) {
-            if (!commentDto.getCreated().isBefore(LocalDateTime.now())) {
-                comment.setCreated(commentDto.getCreated());
-            }
+            comment.setCreated(commentDto.getCreated());
         }
 
         return comment;
