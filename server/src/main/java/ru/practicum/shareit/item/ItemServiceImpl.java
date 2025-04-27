@@ -77,7 +77,6 @@ public class ItemServiceImpl implements ItemService {
     @Override
     @Transactional
     public Item updateItem(Long idUser, Long idItem, ItemDtoInput itemDtoInput) {
-        ItemDto itemDto = new ItemDto();
         if (userRepository.findById(idUser).isEmpty()) {
             String error = "Пользователь с id [ " + idUser + " ] не найден в БД при изменение данных вещи.";
             log.info(error);
