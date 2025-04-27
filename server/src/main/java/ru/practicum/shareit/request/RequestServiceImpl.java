@@ -1,5 +1,6 @@
 package ru.practicum.shareit.request;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class RequestServiceImpl implements RequestService {
      * @throws NotFoundException если пользователь с указанным идентификатором не найден в базе данных
      */
     @Override
+    @Transactional
     public Request addRequest(Long requestorId, RequestDtoInput requestDto) {
         User requestor = new User();
         Request request = new Request();

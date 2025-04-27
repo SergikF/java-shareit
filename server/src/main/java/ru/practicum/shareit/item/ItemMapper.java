@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item;
 
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.Booking;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.booking.BookingStatus;
@@ -12,6 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+@Component
 public class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
@@ -138,6 +140,32 @@ public class ItemMapper {
 
         return item;
     }
+
+    public static ItemDto updateItemDto(ItemDtoInput itemDtoInput, Item oldItem) {
+        ItemDto itemDto = new ItemDto();
+
+        itemDto.setId(oldItem.getId());
+        itemDto.setOwner(oldItem.getOwner());
+        itemDto.setRequest(RequestMapper.toRequestDto(oldItem.getRequest()));
+        if (itemDtoInput.getName() == null) {
+            itemDto.setName(oldItem.getName());
+        } else {
+            itemDto.setName(itemDtoInput.getName());
+        }
+        if (itemDtoInput.getDescription() == null) {
+            itemDto.setDescription(oldItem.getDescription());
+        } else {
+            itemDto.setDescription(itemDtoInput.getDescription());
+        }
+        if (itemDtoInput.getAvailable() == null) {
+            itemDto.setAvailable(oldItem.getAvailable());
+        } else {
+            itemDto.setAvailable(itemDtoInput.getAvailable());
+        }
+
+        return itemDto;
+    }
+
 
     /**
      * Метод поиска первой аренды после текущего момента времени.

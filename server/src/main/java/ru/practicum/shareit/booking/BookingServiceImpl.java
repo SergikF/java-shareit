@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,7 @@ public class BookingServiceImpl implements BookingService {
      * @return бронь из БД.
      */
     @Override
+    @Transactional
     public Booking addBooking(Long bookerId, BookingDtoInput inputBookingDto) {
         Item itemFromDB = itemRepository.findById(inputBookingDto.getItemId())
                 .orElseThrow(() -> new NotFoundException("При создании бронирования не найдена " +
@@ -64,6 +66,7 @@ public class BookingServiceImpl implements BookingService {
      * @return обновлённая бронь.
      */
     @Override
+    @Transactional
     public Booking updateBooking(Long ownerId, Long bookingId, Boolean approved) {
         Booking bookingFromBd = bookingRepository.findById(bookingId).orElseThrow(() -> new NotFoundException(
                 "При обновлении бронирования не найдено бронирование с ID = '" + bookingId + "' в БД."));

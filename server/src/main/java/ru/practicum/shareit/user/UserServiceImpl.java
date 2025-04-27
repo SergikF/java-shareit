@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
      * @throws DataConflictException если пользователь с указанным email уже существует в БД
      */
     @Override
+    @Transactional
     public User addUser(UserDto userDto) {
         Optional<User> oldUser = userRepository.getUserByEmail(userDto.getEmail());
         if (oldUser.isPresent()) {
@@ -50,6 +52,7 @@ public class UserServiceImpl implements UserService {
      * @throws NotFoundException     если пользователь с указанным id не найден в БД
      */
     @Override
+    @Transactional
     public User updateUser(Long idUser, UserDto userDto) {
         Optional<User> oldUser = userRepository.getUserByEmail(userDto.getEmail());
         if (oldUser.isPresent()) {
@@ -117,6 +120,7 @@ public class UserServiceImpl implements UserService {
      * @throws NotFoundException если пользователь с указанным id не найден в БД
      */
     @Override
+    @Transactional
     public void removeUser(Long idUser) {
         Optional<User> oldUser = userRepository.findById(idUser);
         if (oldUser.isEmpty()) {
@@ -126,7 +130,6 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.delete(oldUser.get());
         log.info("По id [ {} ] успешно удален пользователь.", idUser);
-        // log.info("По id [ {} ] успешно удален пользователь [ {} ].", idUser, oldUser.get());
     }
 
 }

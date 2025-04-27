@@ -1,7 +1,9 @@
 package ru.practicum.shareit.request;
 
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.item.ItemMapper;
 
+@Component
 public class RequestMapper {
 
     public static RequestDto toRequestDto(Request request) {

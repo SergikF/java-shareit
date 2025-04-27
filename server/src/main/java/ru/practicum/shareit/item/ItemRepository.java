@@ -14,10 +14,4 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     List<Item> findByNameContainingIgnoreCaseAndAvailableTrueOrDescriptionContainingIgnoreCaseAndAvailableTrue(
             String name, String description, Sort by);
 
-    default List<Item> findAllByText(String text) {
-        return
-                findByNameContainingIgnoreCaseAndAvailableTrueOrDescriptionContainingIgnoreCaseAndAvailableTrue(
-                        text, text, Sort.by("name"));
-    }
-
 }

@@ -39,6 +39,7 @@ public class ItemServiceImpl implements ItemService {
      * @throws NotFoundException   если пользователь с указанным id не найден в БД
      */
     @Override
+    @Transactional
     public Item addItem(Long idUser, ItemDtoInput inputItemDto) {
         ItemDto itemDto = new ItemDto();
         User user = userRepository.findById(idUser).orElse(null);
@@ -74,6 +75,7 @@ public class ItemServiceImpl implements ItemService {
      * @throws RestrictedAccessException если пользователь не является владельцем вещи
      */
     @Override
+    @Transactional
     public Item updateItem(Long idUser, Long idItem, ItemDtoInput itemDtoInput) {
         ItemDto itemDto = new ItemDto();
         if (userRepository.findById(idUser).isEmpty()) {
@@ -92,25 +94,7 @@ public class ItemServiceImpl implements ItemService {
             log.info(error);
             throw new RestrictedAccessException(error);
         }
-        itemDto.setId(idItem);
-        itemDto.setOwner(oldItem.get().getOwner());
-        itemDto.setRequest(RequestMapper.toRequestDto(oldItem.get().getRequest()));
-        if (itemDtoInput.getName() == null) {
-            itemDto.setName(oldItem.get().getName());
-        } else {
-            itemDto.setName(itemDtoInput.getName());
-        }
-        if (itemDtoInput.getDescription() == null) {
-            itemDto.setDescription(oldItem.get().getDescription());
-        } else {
-            itemDto.setDescription(itemDtoInput.getDescription());
-        }
-        if (itemDtoInput.getAvailable() == null) {
-            itemDto.setAvailable(oldItem.get().getAvailable());
-        } else {
-            itemDto.setAvailable(itemDtoInput.getAvailable());
-        }
-        Item newItem = ItemMapper.toItem(itemDto);
+        Item newItem = ItemMapper.toItem(ItemMapper.updateItemDto(itemDtoInput, oldItem.get()));
         itemRepository.save(newItem);
         log.info("Обновлены данные вещи [ {} ]", ItemMapper.toItemDtoShort(newItem));
         return newItem;
@@ -144,6 +128,7 @@ public class ItemServiceImpl implements ItemService {
      * @throws NotFoundException   если пользователь или вещь с указанным id не найдены в БД
      */
     @Override
+    @Transactional
     public void removeItem(Long idUser, Long idItem) {
         if (userRepository.findById(idUser).isEmpty()) {
             String error = "Пользователь с id [ " + idUser + " ] не найден в БД при удалении данных о вещи.";
@@ -191,7 +176,9 @@ public class ItemServiceImpl implements ItemService {
         if (text.isBlank()) {
             return List.of();
         }
-        List<Item> result = itemRepository.findAllByText(text);
+        List<Item> result = itemRepository
+        .findByNameContainingIgnoreCaseAndAvailableTrueOrDescriptionContainingIgnoreCaseAndAvailableTrue(
+                text, text, Sort.by("name"));
         log.info("Получен список вещей по поисковому запросу [ {} ] : [ {} ]", text, result.size());
         return result;
     }

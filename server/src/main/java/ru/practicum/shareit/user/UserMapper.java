@@ -1,5 +1,6 @@
 package ru.practicum.shareit.user;
 
+import org.springframework.stereotype.Component;
 import ru.practicum.shareit.booking.BookingMapper;
 import ru.practicum.shareit.item.ItemMapper;
 import ru.practicum.shareit.item.CommentMapper;
@@ -7,6 +8,7 @@ import ru.practicum.shareit.item.CommentMapper;
 import java.util.Collections;
 import java.util.Optional;
 
+@Component
 public class UserMapper {
 
     public static UserDto toUserDto(User user) {
